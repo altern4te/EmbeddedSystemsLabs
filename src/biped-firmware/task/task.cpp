@@ -200,13 +200,13 @@ bestEffortTask()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-    if(biped::firmware::planner_ < 0)
+    if(planner_stage < 0)
     {
     	biped::firmware::Display(5) << "Planner: inactive";
     }
     else
     {
-    	biped::firmware::Display(5) << "Planner: stage " << biped::firmware::planner_;
+    	biped::firmware::Display(5) << "Planner: stage " << planner_stage;
     }
     /*
      *  If the NeoPixel global shared pointer is not a null pointer, using the NeoPixel global shared
