@@ -203,11 +203,7 @@ bestEffortTask()
     }
     else
     {
-<<<<<<< HEAD
     	Display(5) << "Planner: stage " << planner_stage;
-=======
-    	biped::firmware::Display(5) << "Planner: stage " << planner_stage;
->>>>>>> 6bd4d2877d94be0d49bc1438aa5e74f9f0e82a93
     }
     /*
      *  If the NeoPixel global shared pointer is not a null pointer, using the NeoPixel global shared
