@@ -355,7 +355,7 @@ setup()
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-	//timer_->setInterval(PeriodParameter::fast);
+	timer_->setInterval(PeriodParameter::fast*1000000);
     /*
      *  Using the timer global shared pointer, attach the timer interrupt handler to the
      *  hardware timer.
@@ -365,7 +365,7 @@ setup()
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-	//timer_->attachInterrupt(timerInterruptHander);
+	timer_->attachInterrupt(timerInterruptHandler);
     /*
      *  Using the timer global shared pointer, enable the hardware timer.
      *
@@ -373,7 +373,7 @@ setup()
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-
+    timer_->enable();
     /*
      *  Print to the serial using the Serial class in the serial header. Pass the desired log
      *  level as the constructor argument, and then use the class member insertion operator (<<)
