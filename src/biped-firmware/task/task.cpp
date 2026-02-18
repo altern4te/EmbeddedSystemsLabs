@@ -129,7 +129,7 @@ bestEffortTask()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-    if(biped::firmware::wifi_)
+    if(biped::firmware::wifi_ != nullptr)
     {
     	biped::firmware::WiFi this_wifi = biped::firmware::WiFi();
     	if(this_wifi.getWiFiStatus() == 3)
@@ -140,6 +140,10 @@ bestEffortTask()
     	{
     		biped::firmware::Display(3) << "Wi-Fi: disconnected";
     	}
+    }
+    else
+    {
+       	biped::firmware::Display(3) << "Wi-Fi: disconnected";
     }
 
     /*
@@ -159,7 +163,7 @@ bestEffortTask()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-    if(biped::firmware::controller_)
+    if(biped::firmware::controller_ != nullptr)
     {
     	biped::firmware::Controller this_controller = biped::firmware::Controller();
     	if(this_controller.getActiveStatus())
@@ -170,6 +174,10 @@ bestEffortTask()
     	{
         	biped::firmware::Display(4) << "Controller: inactive";
        	}
+    }
+    else
+    {
+    	biped::firmware::Display(4) << "Controller: inactive";
     }
     /*
      *  If the planner global shared pointer is not a null pointer, using the planner global shared pointer,
@@ -209,7 +217,7 @@ bestEffortTask()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-    if(biped::firmware::neopixel_)
+    if(biped::firmware::neopixel_ != nullptr)
     {
     	biped::firmware::NeoPixel this_neopixel = biped::firmware::NeoPixel();
     	this_neopixel.show();
