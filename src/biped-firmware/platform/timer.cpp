@@ -52,8 +52,10 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-    register_interrupt_clear_ = reinterpret_cast<uint32_t*>(TIMG_INT_CLR_TIMERS_REG(static_cast<int>(group_)));
-    register_interrupt_enable_ = reinterpret_cast<uint32_t*>(TIMG_INT_ENA_TIMERS_REG(static_cast<int>(group_)));
+    register_interrupt_clear_ = reinterpret_cast<uint32_t*>(TIMG_INT_CLR_TIMERS_REG(
+            static_cast<int>(group_)));
+    register_interrupt_enable_ = reinterpret_cast<uint32_t*>(TIMG_INT_ENA_TIMERS_REG(
+            static_cast<int>(group_)));
 
     /*
      *  Switch on timer index.
@@ -82,13 +84,20 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
              *
              *  TODO LAB 2 YOUR CODE HERE.
              */
-            register_config_    = reinterpret_cast<uint32_t*>(TIMG_T0CONFIG_REG(static_cast<int>(group_)));
-            register_alarm_low_ = reinterpret_cast<uint32_t*>(TIMG_T0ALARMLO_REG(static_cast<int>(group_)));
-            register_alarm_high_= reinterpret_cast<uint32_t*>(TIMG_T0ALARMHI_REG(static_cast<int>(group_)));
-            register_counter_low_ = reinterpret_cast<uint32_t*>(TIMG_T0LO_REG(static_cast<int>(group_)));
-            register_counter_high_= reinterpret_cast<uint32_t*>(TIMG_T0HI_REG(static_cast<int>(group_)));
-            register_load_low_  = reinterpret_cast<uint32_t*>(TIMG_T0LOADLO_REG(static_cast<int>(group_)));
-            register_load_high_ = reinterpret_cast<uint32_t*>(TIMG_T0LOADHI_REG(static_cast<int>(group_)));
+            register_config_ = reinterpret_cast<uint32_t*>(TIMG_T0CONFIG_REG(
+                    static_cast<int>(group_)));
+            register_alarm_low_ = reinterpret_cast<uint32_t*>(TIMG_T0ALARMLO_REG(
+                    static_cast<int>(group_)));
+            register_alarm_high_ = reinterpret_cast<uint32_t*>(TIMG_T0ALARMHI_REG(
+                    static_cast<int>(group_)));
+            register_counter_low_ = reinterpret_cast<uint32_t*>(TIMG_T0LO_REG(
+                    static_cast<int>(group_)));
+            register_counter_high_ = reinterpret_cast<uint32_t*>(TIMG_T0HI_REG(
+                    static_cast<int>(group_)));
+            register_load_low_ = reinterpret_cast<uint32_t*>(TIMG_T0LOADLO_REG(
+                    static_cast<int>(group_)));
+            register_load_high_ = reinterpret_cast<uint32_t*>(TIMG_T0LOADHI_REG(
+                    static_cast<int>(group_)));
 
             /*
              *  Frame the timer prescaler by first static_cast the timer prescaler parameter in the parameter
@@ -105,9 +114,8 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
              *
              *  TODO LAB 2 YOUR CODE HERE.
              */
-            uint32_t prescaler_bits =
-                ((static_cast<uint32_t>(TimerParameter::prescaler) << TIMG_T0_DIVIDER_S) & TIMG_T0_DIVIDER_M);
-            (void)prescaler_bits; // used below when writing config
+            uint32_t prescaler_bits = ((static_cast<uint32_t>(TimerParameter::prescaler)
+                    << TIMG_T0_DIVIDER_S) & TIMG_T0_DIVIDER_M);
 
             /*
              *  First, set the timer configuration register to zero.
@@ -135,7 +143,7 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
                 *register_config_ |= TIMG_T0_AUTORELOAD;
                 *register_config_ |= TIMG_T0_LEVEL_INT_EN;
                 *register_config_ |= TIMG_T0_ALARM_EN;
-                *register_config_ |= ((static_cast<uint32_t>(TimerParameter::prescaler) << TIMG_T0_DIVIDER_S) & TIMG_T0_DIVIDER_M);
+                *register_config_ |= prescaler_bits;
             }
 
             /*
@@ -177,7 +185,7 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
                      *  Refer to the soc header for the interrupt source macros.
                      *
                      *  TODO LAB 2 YOUR CODE HERE.
-                    */
+                     */
                     interrupt_source_ = ETS_TG1_T0_LEVEL_INTR_SOURCE;
                     break;
                 }
@@ -211,6 +219,20 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
              *
              *  TODO LAB 2 YOUR CODE HERE.
              */
+            register_config_ = reinterpret_cast<uint32_t*>(TIMG_T1CONFIG_REG(
+                    static_cast<int>(group_)));
+            register_alarm_low_ = reinterpret_cast<uint32_t*>(TIMG_T1ALARMLO_REG(
+                    static_cast<int>(group_)));
+            register_alarm_high_ = reinterpret_cast<uint32_t*>(TIMG_T1ALARMHI_REG(
+                    static_cast<int>(group_)));
+            register_counter_low_ = reinterpret_cast<uint32_t*>(TIMG_T1LO_REG(
+                    static_cast<int>(group_)));
+            register_counter_high_ = reinterpret_cast<uint32_t*>(TIMG_T1HI_REG(
+                    static_cast<int>(group_)));
+            register_load_low_ = reinterpret_cast<uint32_t*>(TIMG_T1LOADLO_REG(
+                    static_cast<int>(group_)));
+            register_load_high_ = reinterpret_cast<uint32_t*>(TIMG_T1LOADHI_REG(
+                    static_cast<int>(group_)));
 
             /*
              *  Frame the timer prescaler by first static_cast the timer prescaler parameter in the parameter
@@ -227,6 +249,8 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
              *
              *  TODO LAB 2 YOUR CODE HERE.
              */
+            uint32_t prescaler_bits = ((static_cast<uint32_t>(TimerParameter::prescaler)
+                    << TIMG_T1_DIVIDER_S) & TIMG_T1_DIVIDER_M);
 
             /*
              *  First, set the timer configuration register to zero.
@@ -247,7 +271,15 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
              *
              *  TODO LAB 2 YOUR CODE HERE.
              */
-            interrupt_source_ = ETS_TG1_T0_LEVEL_INTR_SOURCE;
+            if (register_config_)
+            {
+                *register_config_ = 0;
+                *register_config_ |= TIMG_T1_INCREASE;
+                *register_config_ |= TIMG_T1_AUTORELOAD;
+                *register_config_ |= TIMG_T1_LEVEL_INT_EN;
+                *register_config_ |= TIMG_T1_ALARM_EN;
+                *register_config_ |= prescaler_bits;
+            }
 
             /*
              *  Switch on timer group.
@@ -305,10 +337,14 @@ Timer::Timer(const timer_group_t& group, const timer_idx_t& index) : group_(grou
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-    if (register_counter_low_)  *register_counter_low_ = 0;
-    if (register_counter_high_) *register_counter_high_ = 0;
-    if (register_load_low_)     *register_load_low_ = 0;
-    if (register_load_high_)    *register_load_high_ = 0;
+    if (register_counter_low_)
+        *register_counter_low_ = 0;
+    if (register_counter_high_)
+        *register_counter_high_ = 0;
+    if (register_load_low_)
+        *register_load_low_ = 0;
+    if (register_load_high_)
+        *register_load_high_ = 0;
 }
 
 bool
@@ -340,7 +376,8 @@ Timer::attachInterrupt(void
      *  TODO LAB 2 YOUR CODE HERE.
      */
     {
-        esp_err_t err = esp_intr_alloc(interrupt_source_, 0, reinterpret_cast<intr_handler_t>(handler), arg, &interrupt_handle_);
+        esp_err_t err = esp_intr_alloc(interrupt_source_, 0,
+                reinterpret_cast<intr_handler_t>(handler), arg, &interrupt_handle_);
         if (err != ESP_OK)
         {
             return false;
@@ -380,8 +417,7 @@ Timer::attachInterrupt(void
              */
             if (register_interrupt_enable_)
             {
-                /* assume bit 0 corresponds to timer0; replace with proper macro if different */
-                *register_interrupt_enable_ |= (1u << static_cast<uint32_t>(index_));
+                *register_interrupt_enable_ |= TIMG_T0_INT_ENA;
             }
             break;
         }
@@ -399,8 +435,7 @@ Timer::attachInterrupt(void
              */
             if (register_interrupt_enable_)
             {
-                /* assume bit 1 corresponds to timer1; replace with proper macro if different */
-                *register_interrupt_enable_ |= (1u << static_cast<uint32_t>(index_));
+                *register_interrupt_enable_ |= TIMG_T1_INT_ENA;
             }
             break;
         }
@@ -438,7 +473,7 @@ Timer::clearInterrupt()
              */
             if (register_interrupt_clear_)
             {
-                *register_interrupt_clear_ = (1u << static_cast<uint32_t>(index_));
+                *register_interrupt_clear_ |= TIMG_T0_INT_CLR;
             }
             if (register_config_)
             {
@@ -467,7 +502,7 @@ Timer::clearInterrupt()
              */
             if (register_interrupt_clear_)
             {
-                *register_interrupt_clear_ = (1u << static_cast<uint32_t>(index_));
+                *register_interrupt_clear_ |= TIMG_T1_INT_CLR;
             }
             if (register_config_)
             {
@@ -501,7 +536,7 @@ Timer::detachInterrupt()
              */
             if (register_interrupt_enable_)
             {
-                *register_interrupt_enable_ &= ~(1u << static_cast<uint32_t>(index_));
+                *register_interrupt_enable_ &= ~TIMG_T0_INT_ENA;
             }
             break;
         }
@@ -519,7 +554,7 @@ Timer::detachInterrupt()
              */
             if (register_interrupt_enable_)
             {
-                *register_interrupt_enable_ &= ~(1u << static_cast<uint32_t>(index_));
+                *register_interrupt_enable_ &= ~TIMG_T1_INT_ENA;
             }
             break;
         }
@@ -529,49 +564,49 @@ Timer::detachInterrupt()
         }
     }
 
-    /*
-     *  Using the ESP-IDF esp_intr_disable function in the esp_intr_alloc header,
-     *  disabled the allocated timer interrupt handler using the class member interrupt
-     *  handle pointer. If the return value of the esp_intr_disable function is not the
-     *  ESP_OK macro, return false.
-     *
-     *  Refer to the esp_intr_alloc header for the ESP-IDF interrupt functions.
-     *
-     *  TODO LAB 2 YOUR CODE HERE.
-     */
-    if (interrupt_handle_ != nullptr)
+    if (interrupt_handle_)
     {
+        /*
+         *  Using the ESP-IDF esp_intr_disable function in the esp_intr_alloc header,
+         *  disabled the allocated timer interrupt handler using the class member interrupt
+         *  handle pointer. If the return value of the esp_intr_disable function is not the
+         *  ESP_OK macro, return false.
+         *
+         *  Refer to the esp_intr_alloc header for the ESP-IDF interrupt functions.
+         *
+         *  TODO LAB 2 YOUR CODE HERE.
+         */
         if (esp_intr_disable(interrupt_handle_) != ESP_OK)
         {
             return false;
         }
+
+        /*
+         *  Using the ESP-IDF esp_intr_free function in the esp_intr_alloc header, free the
+         *  allocated timer interrupt handler using the class member interrupt handle pointer.
+         *  If the return value of the esp_intr_free function is not the ESP_OK macro, return
+         *  false.
+         *
+         *  Refer to the esp_intr_alloc header for the ESP-IDF interrupt functions.
+         *
+         *  TODO LAB 2 YOUR CODE HERE.
+         */
         if (esp_intr_free(interrupt_handle_) != ESP_OK)
         {
             return false;
         }
+
+        /*
+         *  Set the class member interrupt handle pointer to a null pointer.
+         *
+         *  Note that due to the existence of smart pointers in C++ (unique pointer,
+         *  shared pointer, etc.) One should always use the nullptr keyword to denote
+         *  all null pointer values when programming in C++, instead of the C macro NULL.
+         *
+         *  TODO LAB 2 YOUR CODE HERE.
+         */
         interrupt_handle_ = nullptr;
     }
-    /*
-     *  Using the ESP-IDF esp_intr_free function in the esp_intr_alloc header, free the
-     *  allocated timer interrupt handler using the class member interrupt handle pointer.
-     *  If the return value of the esp_intr_free function is not the ESP_OK macro, return
-     *  false.
-     *
-     *  Refer to the esp_intr_alloc header for the ESP-IDF interrupt functions.
-     *
-     *  TODO LAB 2 YOUR CODE HERE.
-     */
-    
-    /*
-     *  Set the class member interrupt handle pointer to a null pointer.
-     *
-     *  Note that due to the existence of smart pointers in C++ (unique pointer,
-     *  shared pointer, etc.) One should always use the nullptr keyword to denote
-     *  all null pointer values when programming in C++, instead of the C macro NULL.
-     *
-     *  TODO LAB 2 YOUR CODE HERE.
-     */
-
     /*
      *  Return true.
      */
@@ -683,9 +718,12 @@ Timer::setInterval(const uint64_t& interval)
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-    uint32_t alarm_lo = static_cast<uint32_t>(interval & 0xffffffffULL);
-    uint32_t alarm_hi = static_cast<uint32_t>((interval >> 32) & 0xffffffffULL);
-    if (register_alarm_low_)  *register_alarm_low_ = alarm_lo;
-    if (register_alarm_high_) *register_alarm_high_ = alarm_hi;}
+    uint32_t alarm_lo = static_cast<uint32_t>(interval & 0xffffU);
+    uint32_t alarm_hi = static_cast<uint32_t>((interval >> 32) & 0xffffU);
+    if (register_alarm_low_)
+        *register_alarm_low_ = alarm_lo;
+    if (register_alarm_high_)
+        *register_alarm_high_ = alarm_hi;
+}
 }   // namespace firmware
 }   // namespace biped

@@ -349,7 +349,7 @@ timerInterruptHandler(void* arg)
      */
     if (timer_ != nullptr)
     {
-    	timer_->clearInterrupt();
+        timer_->clearInterrupt();
     }
 }
 }   // namespace firmware

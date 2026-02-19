@@ -78,8 +78,8 @@ setup()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-	Wire.setPins(ESP32Pin::i2c_sda, ESP32Pin::i2c_scl);
-	Serial::setLogLevelMax(SerialParameter::log_level_max);
+    Wire.setPins(ESP32Pin::i2c_sda, ESP32Pin::i2c_scl);
+    Serial::setLogLevelMax(SerialParameter::log_level_max);
 
     /*
      *  Initialize the Arduino I2C driver (Wire), the Arduino
@@ -92,10 +92,10 @@ setup()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-	Wire.begin();
-	EEPROM.begin(EEPROMParameter::size);
-	Display::initialize();
-	Serial::initialize();
+    Wire.begin();
+    EEPROM.begin(EEPROMParameter::size);
+    Display::initialize();
+    Serial::initialize();
 
     /*
      *  Read the Biped serial number from the EEPROM and store it to the
@@ -119,7 +119,7 @@ setup()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-	serial_number_ = static_cast<unsigned>(EEPROM.readByte(AddressParameter::eeprom_serial_number));
+    serial_number_ = static_cast<unsigned>(EEPROM.readByte(AddressParameter::eeprom_serial_number));
 
     /*
      *  Instantiate the camera and the NeoPixel global objects using the C++
@@ -132,8 +132,8 @@ setup()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-	camera_ = std::make_shared<Camera>();
-	neopixel_ = std::make_shared<NeoPixel>();
+    camera_ = std::make_shared<Camera>();
+    neopixel_ = std::make_shared<NeoPixel>();
     /*
      *  Instantiate the timer global object using the C++ STL
      *  std::make_shared function.
@@ -143,7 +143,7 @@ setup()
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-	timer_ = std::make_shared<Timer>(TimerParameter::group, TimerParameter::index);
+    timer_ = std::make_shared<Timer>(TimerParameter::group, TimerParameter::index);
     /*
      *  Instantiate the I/O expander global objects using the C++ STL
      *  std::make_shared function.
@@ -355,7 +355,7 @@ setup()
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-	timer_->setInterval(PeriodParameter::fast*1000000);
+    timer_->setInterval(PeriodParameter::fast * 1000000);
     /*
      *  Using the timer global shared pointer, attach the timer interrupt handler to the
      *  hardware timer.
@@ -365,7 +365,7 @@ setup()
      *
      *  TODO LAB 2 YOUR CODE HERE.
      */
-	timer_->attachInterrupt(timerInterruptHandler);
+    timer_->attachInterrupt(timerInterruptHandler);
     /*
      *  Using the timer global shared pointer, enable the hardware timer.
      *
@@ -400,14 +400,14 @@ setup()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-	if(Serial::getLogLevelWorst() <= LogLevel::error)
-	{
-		biped::firmware::Serial(LogLevel::warn) << "Initialized with error(s)";
-	}
-	else
-	{
-		biped::firmware::Serial(LogLevel::info) << "Initialized.";
-	}
+    if (Serial::getLogLevelWorst() <= LogLevel::error)
+    {
+        biped::firmware::Serial(LogLevel::warn) << "Initialized with error(s)";
+    }
+    else
+    {
+        biped::firmware::Serial(LogLevel::info) << "Initialized.";
+    }
 }
 
 /**
@@ -428,5 +428,5 @@ loop()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
-	bestEffortTask();
+    bestEffortTask();
 }
