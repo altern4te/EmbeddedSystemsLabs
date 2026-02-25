@@ -256,6 +256,10 @@ ioExpanderAInterruptServiceTask(void* pvParameters)
          *
          *  TODO LAB 4 YOUR CODE HERE.
          */
+        if (io_expander_a_global_shared_pointer_ != nullptr)
+        {
+            io_expander_a_global_shared_pointer_->interruptCallback();
+        }
 
         /*
          *  The I/O expander A interrupt handler has been detached by itself. Using the attachInterrupt
@@ -277,6 +281,8 @@ ioExpanderAInterruptServiceTask(void* pvParameters)
          *
          *  TODO LAB 4 YOUR CODE HERE.
          */
+        """uncertain"""
+        biped::firmware::attachInterrupt(digitalPinToInterrupt(io_expander_a_interrupt), ioExpanderAInterruptHandler, HIGH);
     }
 
     /*
@@ -322,6 +328,10 @@ ioExpanderBInterruptServiceTask(void* pvParameters)
          *
          *  TODO LAB 4 YOUR CODE HERE.
          */
+        if (io_expander_b_global_shared_pointer_ != nullptr)
+        {
+            io_expander_b_global_shared_pointer_->interruptCallback();
+        }
 
         /*
          *  The I/O expander B interrupt handler has been detached by itself. Using the attachInterrupt
@@ -343,6 +353,7 @@ ioExpanderBInterruptServiceTask(void* pvParameters)
          *
          *  TODO LAB 4 YOUR CODE HERE.
          */
+        biped::firmware::attachInterrupt(digitalPinToInterrupt(io_expander_b_interrupt), ioExpanderBInterruptHandler, HIGH);
     }
 
     /*
