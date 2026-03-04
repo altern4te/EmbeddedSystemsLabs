@@ -421,7 +421,7 @@ networkTask(void* pvParameters)
          *
          *  TODO LAB 5 YOUR CODE HERE.
          */
-        udp_biped_message_->initialize();
+        udp_biped_message_->initialize(port_udp_biped_message);
 
         /*
          *  Using the FreeRTOS xTaskNotifyGive function, wake up the Biped message UDP
@@ -446,7 +446,7 @@ networkTask(void* pvParameters)
          *
          *  TODO LAB 5 YOUR CODE HERE.
          */
-        udp_camera_->initialize();
+        udp_camera_->initialize(port_udp_camera);
 
         /*
          *  Using the FreeRTOS xTaskNotifyGive function, wake up the camera UDP write task.
@@ -659,7 +659,7 @@ udpReadBipedMessageTask(void* pvParameters)
          *
          *  TODO LAB 5 YOUR CODE HERE.
          */
-        std::string message = udp_biped_message_->read();
+        std::string message = udp_biped_message_->read(ip_ground_station, port_udp_biped_message, buffer_size_biped_message);
 
         /*
          *  Skip the current iteration if the message read above is empty.
@@ -853,7 +853,7 @@ udpWriteBipedMessageTask(void* pvParameters)
              *  TODO LAB 5 YOUR CODE HERE.
              */
             std::string message_serialized_str(message_serialized.begin(), message_serialized.end());
-            udp_biped_message_->write(message_serialized_str);
+            udp_biped_message_->write(ip_ground_station, port_udp_biped_message, message_serialized_str);
         }
         else
         {
@@ -919,11 +919,9 @@ udpWriteCameraTask(void* pvParameters)
          *
          *  TODO LAB 5 YOUR CODE HERE.
          */
-        if (camera_ != nullptr && udp_camera_ != nullptr)
+        if (camera_ != nullptr)
         {
-            std::vector<unsigned char> frame = camera_->captureFrame();
-            std::string frame_str(frame.begin(), frame.end());
-            udp_camera_->write(frame_str);
+            camera_->SendJPGFrameOverUDP(udp_camera_, ip_ground_station, port_udp_camera);
         }
     }
 
