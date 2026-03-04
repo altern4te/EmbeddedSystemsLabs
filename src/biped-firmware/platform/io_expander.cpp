@@ -41,6 +41,8 @@ IOExpander::IOExpander(const uint8_t& address) :
      *  TODO LAB 4 YOUR CODE HERE.
      */
 
+	MCP23018 io_expander_driver_ = std::make_shared<MCP23018>(address);
+
     /*
      *  Initialize Arduino I/O expander driver object.
      *
@@ -48,7 +50,8 @@ IOExpander::IOExpander(const uint8_t& address) :
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
-
+	io_expander_driver_->begin();
+	MCP23018 this_MCP23018 =
     /*
      *  Using the class member Arduino I/O expander driver shared pointer and
      *  the Arduino I/O expander driver writeToRegister function in the MCP23018
