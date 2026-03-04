@@ -310,6 +310,8 @@ setup()
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
+    io_expander_a_->pinModePortA(IOExpanderAPortAPin::push_button_a, PULLUP);
+    io_expander_a_->pinModePortB(IOExpanderAPortBPin::push_button_b, PULLUP);
 
     /*
      *  Using I/O expander global shared pointers and the I/O expander attachInterruptPort
@@ -331,6 +333,9 @@ setup()
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
+    io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::push_button_a, pushButtonAInterruptHandler, FALLING, nullptr);
+    io_expander_a_->attachInterruptPortB(IOExpanderAPortAPin::push_button_b, pushButtonBInterruptHandler, FALLING, nullptr);
+    io_expander_b_->attachInterruptPortB(IOExpanderBPortAPin::push_button_c, pushButtonCInterruptHandler, FALLING, nullptr);
 
     /*
      *  Create the real-time task, all UDP tasks, and the network task using the
