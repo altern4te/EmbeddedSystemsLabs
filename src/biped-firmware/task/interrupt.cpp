@@ -302,7 +302,6 @@ pushButtonAInterruptHandler(void* arg)
 void IRAM_ATTR
 pushButtonBInterruptHandler(void* arg)
 {
-    --serial_number_;
 }
 
 void IRAM_ATTR

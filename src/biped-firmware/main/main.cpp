@@ -320,8 +320,6 @@ setup()
     io_expander_a_->pinModePortA(IOExpanderAPortAPin::push_button_a, INPUT_PULLUP);
     io_expander_a_->pinModePortA(IOExpanderAPortAPin::push_button_b, INPUT_PULLUP);
     io_expander_a_->pinModePortB(IOExpanderAPortBPin::push_button_c, INPUT_PULLUP);
-    io_expander_b_->pinModePortA(IOExpanderBPortAPin::test_1, INPUT_PULLUP);
-
     /*
      *  Using I/O expander global shared pointers and the I/O expander attachInterruptPort
      *  functions, attach the push button interrupt handlers. The argument pointer for the
@@ -343,13 +341,11 @@ setup()
      *  TODO LAB 4 YOUR CODE HERE.
      */
     io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::push_button_a,
-            pushButtonAInterruptHandler, nullptr, ONLOW);
+            pushButtonAInterruptHandler, nullptr, FALLING);
     io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::push_button_b,
             pushButtonBInterruptHandler, nullptr, FALLING);
     io_expander_a_->attachInterruptPortB(IOExpanderAPortBPin::push_button_c,
             pushButtonCInterruptHandler, nullptr, FALLING);
-    io_expander_b_->attachInterruptPortA(IOExpanderBPortAPin::test_1,
-            pushButtonBInterruptHandler, nullptr, FALLING);
 
     /*
      *  Create the real-time task, all UDP tasks, and the network task using the
