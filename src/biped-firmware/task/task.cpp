@@ -178,6 +178,9 @@ bestEffortTask()
     {
         Display(4) << "Controller: inactive";
     }
+
+
+
     /*
      *  If the planner global shared pointer is not a null pointer, using the planner global shared pointer,
      *  execute the plan and store return value to the planner stage local variable.
@@ -207,6 +210,8 @@ bestEffortTask()
     {
         Display(5) << "Planner: stage " << planner_stage;
     }
+
+    Display(6) << "Button A: " << io_expander_a_->digitalReadPortA(static_cast<uint8_t>(IOExpanderAPortAPin::push_button_a));
     /*
      *  If the NeoPixel global shared pointer is not a null pointer, using the NeoPixel global shared
      *  pointer, show the NeoPixel frame by flushing the frame to the NeoPixel array.
@@ -228,6 +233,7 @@ bestEffortTask()
      *
      *  TODO LAB 1 YOUR CODE HERE.
      */
+
     Display::display();
 }
 

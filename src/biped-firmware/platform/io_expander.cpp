@@ -88,7 +88,7 @@ IOExpander::IOExpander(const uint8_t& address) :
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
-	mcp23018_->SetDirections(0,0);
+	mcp23018_->SetDirections(1,1);
     /*
      *  Using the class member Arduino I/O expander driver shared pointer and
      *  the Arduino I/O expander driver SetPullups function in the MCP23018
@@ -195,7 +195,9 @@ IOExpander::attachInterruptPortA(const uint8_t& pin, void
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
-    interrupt_handlers_port_a_[pin] = {handler, arg, mode};
+    interrupt_handlers_port_a_[pin].handler = handler;
+    interrupt_handlers_port_a_[pin].arg = arg;
+    interrupt_handlers_port_a_[pin].mode = mode;
 
     /*
      *  Switch on the given interrupt mode.
@@ -448,7 +450,9 @@ IOExpander::attachInterruptPortB(const uint8_t& pin, void
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
-    interrupt_handlers_port_b_[pin] = {handler, arg, mode};
+    interrupt_handlers_port_b_[pin].handler = handler;
+    interrupt_handlers_port_b_[pin].arg = arg;
+    interrupt_handlers_port_b_[pin].mode = mode;
     /*
      *  Switch on the given interrupt mode.
      */
@@ -713,7 +717,9 @@ IOExpander::detachInterruptPortA(const uint8_t& pin)
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
-    interrupt_handlers_port_a_[pin] = {nullptr, nullptr, DISABLED};
+    interrupt_handlers_port_a_[pin].handler = nullptr;
+    interrupt_handlers_port_a_[pin].arg = nullptr;
+    interrupt_handlers_port_a_[pin].mode = DISABLED;
 }
 
 void
@@ -766,7 +772,9 @@ IOExpander::detachInterruptPortB(const uint8_t& pin)
      *
      *  TODO LAB 4 YOUR CODE HERE.
      */
-    interrupt_handlers_port_b_[pin] = {nullptr, nullptr, DISABLED};
+    interrupt_handlers_port_b_[pin].handler = nullptr;
+    interrupt_handlers_port_b_[pin].arg = nullptr;
+    interrupt_handlers_port_b_[pin].mode = DISABLED;
 }
 
 void
