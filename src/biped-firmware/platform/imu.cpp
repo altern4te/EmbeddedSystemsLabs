@@ -43,7 +43,7 @@ IMU::getData() const
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
-    return mpu6050_data_.IMUData;
+    return mpu6050_data_;
 }
 
 void
