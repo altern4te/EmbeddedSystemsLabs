@@ -139,6 +139,7 @@ Sensor::sense(const bool& fast_domain)
          *
          *  TODO LAB 6 YOUR CODE HERE.
          */
+        encoder_.read();
 
         /*
          *  Perform IMU read using the class member IMU object.
@@ -147,6 +148,7 @@ Sensor::sense(const bool& fast_domain)
          *
          *  TODO LAB 6 YOUR CODE HERE.
          */
+        imu_.read();
     }
     else
     {
@@ -157,6 +159,7 @@ Sensor::sense(const bool& fast_domain)
          *
          *  TODO LAB 6 YOUR CODE HERE.
          */
+        encoder_.calculateVelocity();
 
         /*
          *  Perform time-of-flight reads using the class member
@@ -168,6 +171,7 @@ Sensor::sense(const bool& fast_domain)
          *
          *  TODO LAB 6 YOUR CODE HERE.
          */
+        time_of_flight_data_ = time_of_flight_->read(); //!!!uncertain call
     }
 }
 
@@ -182,6 +186,7 @@ Sensor::onEncoderLeftA()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    encoder_.onLeftA();
 }
 
 void IRAM_ATTR
@@ -195,6 +200,7 @@ Sensor::onEncoderLeftB()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    encoder_.onLeftB();
 }
 
 void IRAM_ATTR
@@ -208,6 +214,7 @@ Sensor::onEncoderRightA()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    encoder_.onRightA();
 }
 
 void IRAM_ATTR
@@ -221,6 +228,7 @@ Sensor::onEncoderRightB()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    encoder_.onRightB();
 }
 }   // namespace firmware
 }   // namespace biped
