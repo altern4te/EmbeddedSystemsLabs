@@ -97,7 +97,7 @@ Encoder::read()
 
 	data_.steps = (steps_left_ + steps_right_) / 2;
 
-	data_.position_x = data_.steps * EncoderParameter::steps_per_meter;
+	data_.position_x = data_.steps / EncoderParameter::steps_per_meter;
 }
 
 void
@@ -129,7 +129,7 @@ Encoder::calculateVelocity()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
-    data_.velocity_x = low_pass_filter_velocity_x_.filter(((data_.steps - steps_last) * EncoderParameter::steps_per_meter) / timer_domain_);
+    data_.velocity_x = low_pass_filter_velocity_x_.filter(((data_.steps - steps_last) / EncoderParameter::steps_per_meter) / timer_domain_);
     /*
      *  Update the last overall encoder steps local variable to be the current
      *  overall encoder steps in the class member encoder data struct.
