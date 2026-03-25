@@ -521,6 +521,10 @@ realTimeTask(void* pvParameters)
          *
          *  TODO LAB 6 YOUR CODE HERE.
          */
+        if (sensor_)
+        {
+            sensor_->sense(true);
+        }
 
         /*
          *  If the controller global shared pointer is not a null pointer, using the controller global
@@ -546,6 +550,10 @@ realTimeTask(void* pvParameters)
              *
              *  TODO LAB 6 YOUR CODE HERE.
              */
+            if (sensor_)
+            {
+                sensor_->sense(false);
+            }
 
             /*
              *  If the controller global shared pointer is not a null pointer, using the controller global
@@ -564,6 +572,7 @@ realTimeTask(void* pvParameters)
              *
              *  TODO LAB 6 YOUR CODE HERE.
              */
+            timer_domain_ = 0;
         }
 
         /*
@@ -587,6 +596,7 @@ realTimeTask(void* pvParameters)
          *
          *  TODO LAB 6 YOUR CODE HERE.
          */
+        timer_domain_ += PeriodParameter::fast;
 
         /*
          *  Calculate the real-time task execution time by subtracting the current time in microseconds,

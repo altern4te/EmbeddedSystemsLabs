@@ -48,6 +48,9 @@ Sensor::Sensor()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    io_expander_a_->pinModePortA(IOExpanderAPortAPin::time_of_flight_left_shutdown, INPUT_PULLUP);
+    io_expander_b_->pinModePortB(IOExpanderAPortBPin::time_of_flight_right_shutdown, INPUT_PULLUP);
+    io_expander_b_->pinModePortB(IOExpanderAPortBPin::time_of_flight_middle_shutdown, INPUT_PULLUP);
 
     /*
      *  Instantiate the class member time-of-flight objects using the C++ STL
@@ -65,6 +68,10 @@ Sensor::Sensor()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    time_of_flight_left_ = std::make_unique<TimeOfFlight>(AddressParameter::time_of_flight_left, IOExpanderAPortAPin::time_of_flight_left_shutdown, io_expander_a_);
+    time_of_flight_right_ = std::make_unique<TimeOfFlight>(AddressParameter::time_of_flight_right, IOExpanderAPortBPin::time_of_flight_right_shutdown + IOExpanderParameter::port_pin_count, io_expander_b_);
+    time_of_flight_middle_ = std::make_unique<TimeOfFlight>(AddressParameter::time_of_flight_middle, IOExpanderAPortBPin::time_of_flight_middle_shutdown + IOExpanderParameter::port_pin_count, io_expander_b_);
+
 }
 
 EncoderData
@@ -76,7 +83,7 @@ Sensor::getEncoderData() const
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
-    return EncoderData();
+    return encoder_.getData(); //!!!uncertain call
 }
 
 IMUData
@@ -88,7 +95,7 @@ Sensor::getIMUData() const
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
-    return IMUData();
+    return imu_.getData(); //!!!uncertain call
 }
 
 TimeOfFlightData
@@ -99,7 +106,7 @@ Sensor::getTimeOfFlightData() const
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
-    return TimeOfFlightData();
+    return time_of_flight_data_;
 }
 
 void

@@ -150,6 +150,10 @@ encoderLeftAInterruptHandler()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    if (sensor_ != nullptr)
+    {
+        sensor_->onEncoderLeftA();
+    }
 }
 
 void IRAM_ATTR
@@ -164,6 +168,10 @@ encoderLeftBInterruptHandler()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    if (sensor_ != nullptr)
+    {
+        sensor_->onEncoderLeftB();
+    }
 }
 
 void IRAM_ATTR
@@ -178,6 +186,10 @@ encoderRightAInterruptHandler()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    if (sensor_ != nullptr)
+    {
+        sensor_->onEncoderRightA();
+    }
 }
 
 void IRAM_ATTR
@@ -192,6 +204,10 @@ encoderRightBInterruptHandler()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
+    if (sensor_ != nullptr)
+    {
+        sensor_->onEncoderRightB();
+    }
 }
 
 void IRAM_ATTR
