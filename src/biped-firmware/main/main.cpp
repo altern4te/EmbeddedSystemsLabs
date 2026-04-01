@@ -194,6 +194,7 @@ setup()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+    controller_ = std::make_shared<Controller>();
 
     /*
      *  Using the controller global shared pointer, set the controller periods.
@@ -205,6 +206,11 @@ setup()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+    if (controller_)        
+    {
+        controller_->setPeriod(PeriodParameter::fast, true);
+        controller_->setPeriod(PeriodParameter::slow, false);
+    }
 
     /*
      *  Instantiate the planner global object using the C++ STL std::make_shared
