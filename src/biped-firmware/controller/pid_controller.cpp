@@ -197,7 +197,7 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-    double P = ;
+    double P = gain_.proportional * curr_error;
     /*
      *  Calculate the integral output using the new discrete integral
      *  of error (integral of e).
@@ -206,7 +206,7 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+    double I = gain_.integral * error_integral_;
     /*
      *  Calculate the differential output using the class member
      *  differential error variable.
@@ -228,14 +228,14 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+    double D = gain_.differential * error_differential_;
     /*
      *  Sum up all of the above proportional, integral, and
      *  differential output.
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+    double PID = P + I + D;
     /*
      *  Using the clamp function in the math header, return the
      *  sum of the output computed above clamped between the output
@@ -244,7 +244,7 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-    return 0;
+    return clamp(PID, saturation_.output_lower, saturation_.output_upper);
 }
 }   // namespace firmware
 }   // namespace biped
