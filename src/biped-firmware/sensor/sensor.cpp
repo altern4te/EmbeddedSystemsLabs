@@ -48,9 +48,9 @@ Sensor::Sensor()
      *
      *  TODO LAB 6 YOUR CODE HERE.
      */
-    io_expander_a_->pinModePortA(IOExpanderAPortAPin::time_of_flight_left_shutdown, INPUT_PULLUP);
-    io_expander_a_->pinModePortB(IOExpanderAPortBPin::time_of_flight_right_shutdown, INPUT_PULLUP);
-    io_expander_a_->pinModePortB(IOExpanderAPortBPin::time_of_flight_middle_shutdown, INPUT_PULLUP);
+    io_expander_a_->pinModePortA(IOExpanderAPortAPin::time_of_flight_left_shutdown, OUTPUT);
+    io_expander_a_->pinModePortB(IOExpanderAPortBPin::time_of_flight_right_shutdown, OUTPUT);
+    io_expander_a_->pinModePortB(IOExpanderAPortBPin::time_of_flight_middle_shutdown, OUTPUT);
 
     /*
      *  Instantiate the class member time-of-flight objects using the C++ STL
