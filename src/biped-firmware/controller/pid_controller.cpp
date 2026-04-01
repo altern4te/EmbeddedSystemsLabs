@@ -38,7 +38,7 @@ PIDController::getReference() const
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-    return 0;
+    return reference_;
 }
 
 void
@@ -49,7 +49,7 @@ PIDController::setGain(const PIDControllerGain& gain)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+	gain_ = gain;
     /*
      *  The existing integrated error (integral of e)
      *  becomes meaningless with new gains. Reset the
@@ -57,6 +57,7 @@ PIDController::setGain(const PIDControllerGain& gain)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	resetErrorIntegral();
 }
 
 void
@@ -67,6 +68,7 @@ PIDController::setSaturation(const ControllerSaturation& saturation)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	saturation_ = saturation;
 }
 
 void
@@ -77,6 +79,7 @@ PIDController::setState(const double& state)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	state_ = state;
 }
 
 void
@@ -87,7 +90,7 @@ PIDController::setReference(const double& reference)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+	reference_ = reference;
     /*
      *  The existing integrated error (integral of e)
      *  becomes meaningless with new references. Reset the
@@ -95,6 +98,7 @@ PIDController::setReference(const double& reference)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	resetErrorIntegral();
 }
 
 void
@@ -105,6 +109,7 @@ PIDController::setPeriod(const double& period)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	period_ = period;
 
     /*
      *  The existing integrated error (integral of e)
@@ -113,6 +118,7 @@ PIDController::setPeriod(const double& period)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	resetErrorIntegral();
 }
 
 void
@@ -123,6 +129,7 @@ PIDController::setErrorDifferential(const double& error_differential)
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	error_differential_ = error_differential;
 }
 
 void
@@ -133,6 +140,7 @@ PIDController::resetErrorIntegral()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
+	error_integral_ = 0.0;
 }
 
 double
@@ -161,7 +169,7 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+    double curr_error = clamp((state_ - reference_), saturation_.input_lower, saturation_.input_upper);
     /*
      *  Calculate the new discrete integral of error (integral of e).
      *  Using the clamp function in the math header, clamp the
@@ -181,7 +189,7 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+    error_integral_ = clamp((error_integral_ + period_*curr_error), -gain_.integral_max, gain_.integral_max);
     /*
      *  Calculate the proportional output using the current error (e).
      *
@@ -189,7 +197,7 @@ PIDController::control()
      *
      *  TODO LAB 7 YOUR CODE HERE.
      */
-
+    double P = ;
     /*
      *  Calculate the integral output using the new discrete integral
      *  of error (integral of e).
