@@ -161,7 +161,7 @@ ManeuverPlanner::plan()
      *
      *  TODO LAB 8 YOUR CODE HERE.
      */
-    if (plan_completed_ || !controller_){
+    if (plan_completed_ || !controller_->getActiveStatus()){
         return -1;
     }
     /*
@@ -181,7 +181,7 @@ ManeuverPlanner::plan()
          */
         plan_started_ = false;
         plan_completed_ = true;
-        if ((plan_started_ && !plan_completed_) && maneuver_ == NULL){
+        if ((plan_started_ && !plan_completed_) && maneuver_ == nullptr){
             return -1;
         }
     }
@@ -224,6 +224,9 @@ ManeuverPlanner::plan()
          *
          *  TODO LAB 8 YOUR CODE HERE.
          */
+        controller_->setControllerReference(generateControllerReference());
+        maneuver_timer_ = millis();
+        maneuver_started_ = true;
     }
     else
     {
@@ -252,6 +255,11 @@ ManeuverPlanner::plan()
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
 
+                if (millis() - maneuver_timer_ > maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::position_x_above:
@@ -269,7 +277,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                EncoderData enc_data = sensor_->getEncoderData();
+                if (enc_data.position_x > maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::position_x_below:
@@ -287,7 +300,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                EncoderData enc_data = sensor_->getEncoderData();
+                if (enc_data.position_x < maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::range_left_above:
@@ -305,7 +323,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+                if (tof_data.range_left > maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::range_left_below:
@@ -323,7 +346,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+                if (tof_data.range_left < maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::range_middle_above:
@@ -341,7 +369,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+                if (tof_data.range_middle > maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::range_middle_below:
@@ -359,7 +392,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+                if (tof_data.range_middle < maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::range_right_above:
@@ -377,7 +415,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+                if (tof_data.range_right > maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::range_right_below:
@@ -395,7 +438,12 @@ ManeuverPlanner::plan()
                  *
                  *  TODO LAB 8 YOUR CODE HERE.
                  */
-
+                TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+                if (tof_data.range_right < maneuver_->transition_value) {
+                    maneuver_ = maneuver_->next;
+                    ++maneuver_counter_;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             default:
@@ -414,7 +462,7 @@ ManeuverPlanner::plan()
      *
      *  TODO LAB 8 YOUR CODE HERE.
      */
-    return 0;
+    return maneuver_counter_;
 }
 
 ControllerReference
@@ -449,7 +497,8 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x;
             break;
         }
         case Maneuver::Type::reverse:
@@ -462,7 +511,8 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x - 1000;
             break;
         }
         case Maneuver::Type::reverse_left:
@@ -483,7 +533,9 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x - 1000;
+            controller_reference.attitude_z = degreesToRadians(90);
             break;
         }
         case Maneuver::Type::reverse_right:
@@ -504,7 +556,9 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x - 1000;
+            controller_reference.attitude_z = degreesToRadians(-90);
             break;
         }
         case Maneuver::Type::drive:
@@ -517,7 +571,8 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x + 1000;
             break;
         }
         case Maneuver::Type::drive_left:
@@ -534,7 +589,9 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x + 1000;
+            controller_reference.attitude_z = degreesToRadians(-90);
             break;
         }
         case Maneuver::Type::drive_right:
@@ -551,7 +608,9 @@ ManeuverPlanner::generateControllerReference() const
              *
              *  TODO LAB 8 YOUR CODE HERE.
              */
-
+            EncoderData enc_data = sensor_->getEncoderData();
+            controller_reference.position_x = enc_data.position_x + 1000;
+            controller_reference.attitude_z = degreesToRadians(90);
             break;
         }
         default:
