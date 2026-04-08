@@ -126,9 +126,9 @@ ManeuverPlanner::start()
      *  TODO LAB 8 YOUR CODE HERE.
      */
     if (plan_completed_){
-        maneuver_ = ;
+        maneuver_ = maneuver_start_;
         maneuver_counter_ = 1;
-        maneuver_ = !maneuver_start_;
+        maneuver_started_ = false;
         plan_started_ = false;
         plan_completed_ = false;
     }
