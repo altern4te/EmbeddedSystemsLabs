@@ -113,47 +113,75 @@ ManeuverPlanner::ManeuverPlanner() : maneuver_counter_(1), maneuver_timer_(0), p
      *  TODO LAB 9 YOUR CODE HERE.
      */
     
-    // Custom Lab 9 plan: A simple park-drive-park-turn sequence.
-    // This plan demonstrates basic maneuver chaining without excessive complexity.
-    std::shared_ptr<Maneuver> custom_1 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> custom_2 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> custom_3 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> custom_4 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> custom_5 = std::make_shared<Maneuver>();
+    // Custom Lab 9 plan: Obstacle avoidance using time-of-flight sensors.
+    // This plan drives forward while checking for obstacles within 10cm.
+    // If obstacle detected on left sensor: reverse and turn right to avoid.
+    // If obstacle detected on right sensor: reverse and turn left to avoid.
+    // If obstacle detected on middle sensor: reverse straight back to avoid.
+    // After avoidance, continue driving and checking.
+    // Finally park after completing the sequence.
 
-    maneuver_start_ = custom_1;
+    std::shared_ptr<Maneuver> drive_check_left = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> avoid_left = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> drive_check_right = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> avoid_right = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> drive_check_middle = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> avoid_middle = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> park_end = std::make_shared<Maneuver>();
+
+    maneuver_start_ = drive_check_left;
     maneuver_ = maneuver_start_;
 
-    // Step 1: Park for 1 second to initialize
-    custom_1->transition_type = Maneuver::TransitionType::duration;
-    custom_1->transition_value = 1;
-    custom_1->type = Maneuver::Type::park;
-    custom_1->next = custom_2;
+    // Drive forward, check for left obstacle
+    drive_check_left->transition_type = Maneuver::TransitionType::range_left_below;
+    drive_check_left->transition_value = 0.1;  // 10cm
+    drive_check_left->type = Maneuver::Type::drive;
+    drive_check_left->next = avoid_left;
 
-    // Step 2: Drive forward until reaching 0.5m position
-    custom_2->transition_type = Maneuver::TransitionType::position_x_above;
-    custom_2->transition_value = 0.5;
-    custom_2->type = Maneuver::Type::drive;
-    custom_2->next = custom_3;
+    // If left obstacle detected, reverse and turn right for 2 seconds
+    avoid_left->transition_type = Maneuver::TransitionType::duration;
+    avoid_left->transition_value = 2;
+    avoid_left->type = Maneuver::Type::reverse_right;
+    avoid_left->next = drive_check_right;
 
-    // Step 3: Park for 1 second
-    custom_3->transition_type = Maneuver::TransitionType::duration;
-    custom_3->transition_value = 1;
-    custom_3->type = Maneuver::Type::park;
-    custom_3->next = custom_4;
+    // Continue driving, check for right obstacle
+    drive_check_right->transition_type = Maneuver::TransitionType::range_right_below;
+    drive_check_right->transition_value = 0.1;  // 10cm
+    drive_check_right->type = Maneuver::Type::drive;
+    drive_check_right->next = avoid_right;
 
-    // Step 4: Drive left 45 degrees while moving forward
-    custom_4->transition_type = Maneuver::TransitionType::duration;
-    custom_4->transition_value = 3;
-    custom_4->type = Maneuver::Type::drive_left;
-    custom_4->next = custom_5;
+    // If right obstacle detected, reverse and turn left for 2 seconds
+    avoid_right->transition_type = Maneuver::TransitionType::duration;
+    avoid_right->transition_value = 2;
+    avoid_right->type = Maneuver::Type::reverse_left;
+    avoid_right->next = drive_check_middle;
 
-    // Step 5: Park for 1 second (end)
-    custom_5->transition_type = Maneuver::TransitionType::duration;
-    custom_5->transition_value = 1;
-    custom_5->type = Maneuver::Type::park;
-    custom_5->next = nullptr;
-    
+    // Continue driving, check for middle obstacle
+    drive_check_middle->transition_type = Maneuver::TransitionType::range_middle_below;
+    drive_check_middle->transition_value = 0.1;  // 10cm
+    drive_check_middle->type = Maneuver::Type::drive;
+    drive_check_middle->next = avoid_middle;
+
+    // If middle obstacle detected, reverse straight back for 2 seconds
+    avoid_middle->transition_type = Maneuver::TransitionType::duration;
+    avoid_middle->transition_value = 2;
+    avoid_middle->type = Maneuver::Type::reverse;
+    avoid_middle->next = park_end;
+
+    // Final park
+    park_end->transition_type = Maneuver::TransitionType::duration;
+    park_end->transition_value = 1;
+    park_end->type = Maneuver::Type::park;
+    park_end->next = nullptr;
+
+    // Assign to class members
+    avoid_left_ = avoid_left;
+    avoid_right_ = avoid_right;
+    avoid_middle_ = avoid_middle;
+    drive_check_left_ = drive_check_left;
+    drive_check_right_ = drive_check_right;
+    drive_check_middle_ = drive_check_middle;
+    park_end_ = park_end;
 }
 
 void IRAM_ATTR
@@ -273,10 +301,37 @@ ManeuverPlanner::plan()
     else
     {
         /*
-         *  Transition to the next maneuver based on the current maneuver
-         *  transition type and value.
+         *  Check for obstacles and transition to avoidance maneuvers if detected.
          */
-        switch (maneuver_->transition_type)
+        TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+        if (tof_data.range_left < 0.1 && maneuver_ != avoid_left_)
+        {
+            maneuver_ = avoid_left_;
+            ++maneuver_counter_;
+            maneuver_started_ = false;
+            return maneuver_counter_;
+        }
+        else if (tof_data.range_right < 0.1 && maneuver_ != avoid_right_)
+        {
+            maneuver_ = avoid_right_;
+            ++maneuver_counter_;
+            maneuver_started_ = false;
+            return maneuver_counter_;
+        }
+        else if (tof_data.range_middle < 0.1 && maneuver_ != avoid_middle_)
+        {
+            maneuver_ = avoid_middle_;
+            ++maneuver_counter_;
+            maneuver_started_ = false;
+            return maneuver_counter_;
+        }
+        else
+        {
+            /*
+             *  Transition to the next maneuver based on the current maneuver
+             *  transition type and value.
+             */
+            switch (maneuver_->transition_type)
         {
             case Maneuver::TransitionType::duration:
             {
@@ -496,6 +551,7 @@ ManeuverPlanner::plan()
                 Serial(LogLevel::warn) << "Unknown maneuver transition type.";
                 break;
             }
+        }
         }
     }
 

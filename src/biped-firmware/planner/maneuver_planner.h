@@ -96,6 +96,13 @@ private:
 
     std::shared_ptr<Maneuver> maneuver_;    //!< Current maneuver shared pointer.
     std::shared_ptr<Maneuver> maneuver_start_;    //!< Start maneuver shared pointer.
+    std::shared_ptr<Maneuver> avoid_left_;    //!< Avoidance maneuver for left obstacle.
+    std::shared_ptr<Maneuver> avoid_right_;    //!< Avoidance maneuver for right obstacle.
+    std::shared_ptr<Maneuver> avoid_middle_;    //!< Avoidance maneuver for middle obstacle.
+    std::shared_ptr<Maneuver> drive_check_left_;    //!< Drive maneuver checking left sensor.
+    std::shared_ptr<Maneuver> drive_check_right_;    //!< Drive maneuver checking right sensor.
+    std::shared_ptr<Maneuver> drive_check_middle_;    //!< Drive maneuver checking middle sensor.
+    std::shared_ptr<Maneuver> park_end_;    //!< Final park maneuver.
     int maneuver_counter_;  //!< Maneuver counter.
     unsigned long maneuver_timer_;  //!< Maneuver timer, in milliseconds.
     volatile bool plan_started_;    //!< Plan started flag.

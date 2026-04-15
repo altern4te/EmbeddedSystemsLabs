@@ -113,32 +113,50 @@ WaypointPlanner::WaypointPlanner() : waypoint_counter_(1), waypoint_timer_(0), p
      *  TODO LAB 9 YOUR CODE HERE.
      */
     
-    // Custom Lab 9 plan: A simple triangular movement pattern.
-    // This plan demonstrates basic waypoint navigation with varied angles.
-    std::shared_ptr<Waypoint> custom_wp1 = std::make_shared<Waypoint>();
-    std::shared_ptr<Waypoint> custom_wp2 = std::make_shared<Waypoint>();
-    std::shared_ptr<Waypoint> custom_wp3 = std::make_shared<Waypoint>();
+    // Custom Lab 9 plan: Simulated obstacle avoidance path.
+    // This waypoint plan demonstrates a path that could be used for obstacle avoidance.
+    // The path moves forward, turns left to go around a potential left obstacle,
+    // continues forward, straightens out, and returns to start position.
+    // In a real dynamic system, sensor checks would adjust the path, but here
+    // it's a predefined sequence simulating avoidance behavior.
+    std::shared_ptr<Waypoint> wp1 = std::make_shared<Waypoint>();
+    std::shared_ptr<Waypoint> wp2 = std::make_shared<Waypoint>();
+    std::shared_ptr<Waypoint> wp3 = std::make_shared<Waypoint>();
+    std::shared_ptr<Waypoint> wp4 = std::make_shared<Waypoint>();
+    std::shared_ptr<Waypoint> wp5 = std::make_shared<Waypoint>();
 
-    waypoint_start_ = custom_wp1;
+    waypoint_start_ = wp1;
     waypoint_ = waypoint_start_;
 
-    // Waypoint 1: Move to 0.3m forward, no turn, 4 seconds
-    custom_wp1->controller_reference.attitude_z = degreesToRadians(0);
-    custom_wp1->controller_reference.position_x = 0.3;
-    custom_wp1->duration = 4;
-    custom_wp1->next = custom_wp2;
+    // Waypoint 1: Move to 0.4m forward, no turn, 5 seconds
+    wp1->controller_reference.attitude_z = degreesToRadians(0);
+    wp1->controller_reference.position_x = 0.4;
+    wp1->duration = 5;
+    wp1->next = wp2;
 
-    // Waypoint 2: Move to 0.7m forward, turn right 30 degrees, 8 seconds
-    custom_wp2->controller_reference.attitude_z = degreesToRadians(30);
-    custom_wp2->controller_reference.position_x = 0.7;
-    custom_wp2->duration = 8;
-    custom_wp2->next = custom_wp3;
+    // Waypoint 2: Turn left 45°, hold position, 3 seconds
+    wp2->controller_reference.attitude_z = degreesToRadians(-45);  // Turn left
+    wp2->controller_reference.position_x = 0.4;  // Hold position
+    wp2->duration = 3;
+    wp2->next = wp3;
 
-    // Waypoint 3: Return to 0.3m, turn left 30 degrees, 8 seconds (end)
-    custom_wp3->controller_reference.attitude_z = degreesToRadians(-30);
-    custom_wp3->controller_reference.position_x = 0.3;
-    custom_wp3->duration = 8;
-    custom_wp3->next = nullptr;
+    // Waypoint 3: Move to 0.8m forward, 45° turn, 8 seconds
+    wp3->controller_reference.attitude_z = degreesToRadians(-45);  // Continue left turn
+    wp3->controller_reference.position_x = 0.8;  // Move forward
+    wp3->duration = 8;
+    wp3->next = wp4;
+
+    // Waypoint 4: Turn back to 0°, hold position, 3 seconds
+    wp4->controller_reference.attitude_z = degreesToRadians(0);  // Straighten out
+    wp4->controller_reference.position_x = 0.8;  // Hold position
+    wp4->duration = 3;
+    wp4->next = wp5;
+
+    // Waypoint 5: Return to 0.4m, no turn, 8 seconds (end)
+    wp5->controller_reference.attitude_z = degreesToRadians(0);
+    wp5->controller_reference.position_x = 0.4;  // Return
+    wp5->duration = 8;
+    wp5->next = nullptr;   
 }
 
 void IRAM_ATTR
@@ -171,6 +189,15 @@ WaypointPlanner::plan()
     if (!controller_)
     {
         Serial(LogLevel::error) << "Controller missing.";
+        return -1;
+    }
+
+    /*
+     *  Validate sensor global object shared pointer.
+     */
+    if (!sensor_)
+    {
+        Serial(LogLevel::error) << "Sensor missing.";
         return -1;
     }
 
@@ -244,7 +271,26 @@ WaypointPlanner::plan()
          *
          *  TODO LAB 8 YOUR CODE HERE.
          */
-        controller_->setControllerReference(waypoint_->controller_reference);
+        ControllerReference ref = waypoint_->controller_reference;
+
+        /*
+         *  Adjust controller reference based on time-of-flight sensor data for obstacle avoidance.
+         */
+        TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
+        if (tof_data.range_left < 0.1)
+        {
+            ref.attitude_z = degreesToRadians(45);  // Turn right to avoid left obstacle
+        }
+        else if (tof_data.range_right < 0.1)
+        {
+            ref.attitude_z = degreesToRadians(-45);  // Turn left to avoid right obstacle
+        }
+        else if (tof_data.range_middle < 0.1)
+        {
+            ref.position_x = sensor_->getEncoderData().position_x - 0.5;  // Reverse 0.5m to avoid middle obstacle
+        }
+
+        controller_->setControllerReference(ref);
         waypoint_timer_ = millis();
         waypoint_started_ = true;
     }
