@@ -36,67 +36,67 @@ ManeuverPlanner::ManeuverPlanner() : maneuver_counter_(1), maneuver_timer_(0), p
      *  In the following configurations, the maneuvers should
      *  be chained up in a linked list fashion.
      */
-    std::shared_ptr<Maneuver> maneuver_1 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> maneuver_2 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> maneuver_3 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> maneuver_4 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> maneuver_5 = std::make_shared<Maneuver>();
-
-    /*
-     *  Set the start and current maneuvers.
-     */
-    maneuver_start_ = maneuver_1;
-    maneuver_ = maneuver_start_;
-
-    /*
-     *  Example plan maneuver 1 configuration:
-     *      - Park for 2 seconds.
-     *      - Then, start maneuver 2.
-     */
-    maneuver_1->transition_type = Maneuver::TransitionType::duration;
-    maneuver_1->transition_value = 2;
-    maneuver_1->type = Maneuver::Type::park;
-    maneuver_1->next = maneuver_2;
-
-    /*
-     *  Example plan maneuver 2 configuration:
-     *      - Drive forward until the X position goes above 1 meter.
-     *      - Then, start maneuver 3.
-     */
-    maneuver_2->transition_type = Maneuver::TransitionType::position_x_above;
-    maneuver_2->transition_value = 1;
-    maneuver_2->type = Maneuver::Type::drive;
-    maneuver_2->next = maneuver_3;
-
-    /*
-     *  Example plan maneuver 3 configuration:
-     *      - Park for 2 seconds.
-     *      - Then, start maneuver 4.
-     */
-    maneuver_3->transition_type = Maneuver::TransitionType::duration;
-    maneuver_3->transition_value = 2;
-    maneuver_3->type = Maneuver::Type::park;
-    maneuver_3->next = maneuver_4;
-
-    /*
-     *  Example plan maneuver 4 configuration:
-     *      - Drive right until the X position goes above 2 meters.
-     *      - Then, start maneuver 5.
-     */
-    maneuver_4->transition_type = Maneuver::TransitionType::position_x_above;
-    maneuver_4->transition_value = 2;
-    maneuver_4->type = Maneuver::Type::drive_right;
-    maneuver_4->next = maneuver_5;
-
-    /*
-     *  Example plan maneuver 5 configuration:
-     *      - Park for 2 seconds.
-     *      - The end.
-     */
-    maneuver_5->transition_type = Maneuver::TransitionType::duration;
-    maneuver_5->transition_value = 2;
-    maneuver_5->type = Maneuver::Type::park;
-    maneuver_5->next = nullptr;
+//    std::shared_ptr<Maneuver> maneuver_1 = std::make_shared<Maneuver>();
+//    std::shared_ptr<Maneuver> maneuver_2 = std::make_shared<Maneuver>();
+//    std::shared_ptr<Maneuver> maneuver_3 = std::make_shared<Maneuver>();
+//    std::shared_ptr<Maneuver> maneuver_4 = std::make_shared<Maneuver>();
+//    std::shared_ptr<Maneuver> maneuver_5 = std::make_shared<Maneuver>();
+//
+//    /*
+//     *  Set the start and current maneuvers.
+//     */
+//    maneuver_start_ = maneuver_1;
+//    maneuver_ = maneuver_start_;
+//
+//    /*
+//     *  Example plan maneuver 1 configuration:
+//     *      - Park for 2 seconds.
+//     *      - Then, start maneuver 2.
+//     */
+//    maneuver_1->transition_type = Maneuver::TransitionType::duration;
+//    maneuver_1->transition_value = 2;
+//    maneuver_1->type = Maneuver::Type::park;
+//    maneuver_1->next = maneuver_2;
+//
+//    /*
+//     *  Example plan maneuver 2 configuration:
+//     *      - Drive forward until the X position goes above 1 meter.
+//     *      - Then, start maneuver 3.
+//     */
+//    maneuver_2->transition_type = Maneuver::TransitionType::position_x_above;
+//    maneuver_2->transition_value = 1;
+//    maneuver_2->type = Maneuver::Type::drive;
+//    maneuver_2->next = maneuver_3;
+//
+//    /*
+//     *  Example plan maneuver 3 configuration:
+//     *      - Park for 2 seconds.
+//     *      - Then, start maneuver 4.
+//     */
+//    maneuver_3->transition_type = Maneuver::TransitionType::duration;
+//    maneuver_3->transition_value = 2;
+//    maneuver_3->type = Maneuver::Type::park;
+//    maneuver_3->next = maneuver_4;
+//
+//    /*
+//     *  Example plan maneuver 4 configuration:
+//     *      - Drive right until the X position goes above 2 meters.
+//     *      - Then, start maneuver 5.
+//     */
+//    maneuver_4->transition_type = Maneuver::TransitionType::position_x_above;
+//    maneuver_4->transition_value = 2;
+//    maneuver_4->type = Maneuver::Type::drive_right;
+//    maneuver_4->next = maneuver_5;
+//
+//    /*
+//     *  Example plan maneuver 5 configuration:
+//     *      - Park for 2 seconds.
+//     *      - The end.
+//     */
+//    maneuver_5->transition_type = Maneuver::TransitionType::duration;
+//    maneuver_5->transition_value = 2;
+//    maneuver_5->type = Maneuver::Type::park;
+//    maneuver_5->next = nullptr;
 
     /*
      *  Using the example plan above, create your own maneuver-based plan.
@@ -134,45 +134,45 @@ ManeuverPlanner::ManeuverPlanner() : maneuver_counter_(1), maneuver_timer_(0), p
 
     // Drive forward, check for left obstacle
     drive_check_left->transition_type = Maneuver::TransitionType::range_left_below;
-    drive_check_left->transition_value = 0.1;  // 10cm
+    drive_check_left->transition_value = 0.5;  // 10cm
     drive_check_left->type = Maneuver::Type::drive;
     drive_check_left->next = avoid_left;
 
     // If left obstacle detected, reverse and turn right for 2 seconds
-    avoid_left->transition_type = Maneuver::TransitionType::duration;
-    avoid_left->transition_value = 2;
-    avoid_left->type = Maneuver::Type::reverse_right;
+    avoid_left->transition_type = Maneuver::TransitionType::range_left_above;
+    avoid_left->transition_value = 1;
+    avoid_left->type = Maneuver::Type::reverse_left;
     avoid_left->next = drive_check_right;
 
     // Continue driving, check for right obstacle
     drive_check_right->transition_type = Maneuver::TransitionType::range_right_below;
-    drive_check_right->transition_value = 0.1;  // 10cm
+    drive_check_right->transition_value = 0.5;  // 10cm
     drive_check_right->type = Maneuver::Type::drive;
     drive_check_right->next = avoid_right;
 
     // If right obstacle detected, reverse and turn left for 2 seconds
-    avoid_right->transition_type = Maneuver::TransitionType::duration;
-    avoid_right->transition_value = 2;
-    avoid_right->type = Maneuver::Type::reverse_left;
+    avoid_right->transition_type = Maneuver::TransitionType::range_right_above;
+    avoid_right->transition_value = 1;
+    avoid_right->type = Maneuver::Type::reverse_right;
     avoid_right->next = drive_check_middle;
 
     // Continue driving, check for middle obstacle
     drive_check_middle->transition_type = Maneuver::TransitionType::range_middle_below;
-    drive_check_middle->transition_value = 0.1;  // 10cm
+    drive_check_middle->transition_value = 0.5;  // 10cm
     drive_check_middle->type = Maneuver::Type::drive;
     drive_check_middle->next = avoid_middle;
 
     // If middle obstacle detected, reverse straight back for 2 seconds
-    avoid_middle->transition_type = Maneuver::TransitionType::duration;
-    avoid_middle->transition_value = 2;
-    avoid_middle->type = Maneuver::Type::reverse;
-    avoid_middle->next = park_end;
+    avoid_middle->transition_type = Maneuver::TransitionType::range_middle_above;
+    avoid_middle->transition_value = 0.7;
+    avoid_middle->type = Maneuver::Type::reverse_right;
+    avoid_middle->next = drive_check_left;
 
     // Final park
     park_end->transition_type = Maneuver::TransitionType::duration;
     park_end->transition_value = 1;
     park_end->type = Maneuver::Type::park;
-    park_end->next = nullptr;
+    park_end->next = drive_check_left;
 
     // Assign to class members
     avoid_left_ = avoid_left;
