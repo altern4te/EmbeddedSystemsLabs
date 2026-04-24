@@ -251,9 +251,7 @@ ManeuverPlanner::plan()
          */
         plan_started_ = false;
         plan_completed_ = true;
-        if ((plan_started_ && !plan_completed_) && maneuver_ == nullptr){
-            return -1;
-        }
+        return -1;
     }
 
     if (!plan_started_)
@@ -306,6 +304,7 @@ ManeuverPlanner::plan()
         TimeOfFlightData tof_data = sensor_->getTimeOfFlightData();
         if (tof_data.range_left < 0.1 && maneuver_ != avoid_left_)
         {
+            Serial(LogLevel::info) << "Performing avoid left maneuver.";
             maneuver_ = avoid_left_;
             ++maneuver_counter_;
             maneuver_started_ = false;
@@ -313,6 +312,7 @@ ManeuverPlanner::plan()
         }
         else if (tof_data.range_right < 0.1 && maneuver_ != avoid_right_)
         {
+            Serial(LogLevel::info) << "Performing avoid right maneuver.";
             maneuver_ = avoid_right_;
             ++maneuver_counter_;
             maneuver_started_ = false;
@@ -320,6 +320,7 @@ ManeuverPlanner::plan()
         }
         else if (tof_data.range_middle < 0.1 && maneuver_ != avoid_middle_)
         {
+            Serial(LogLevel::info) << "Performing avoid middle maneuver.";
             maneuver_ = avoid_middle_;
             ++maneuver_counter_;
             maneuver_started_ = false;
